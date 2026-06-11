@@ -34,7 +34,17 @@ Gerencie suas empresas
 @endsection
 
 @section('app-shell-workspace')
- <span>Nenhuma empresa cadastrada.</span>
+     @if($companies->count() > 0)
+        <ul class="app-shell__list">
+        @foreach($companies as $company)
+            <a href="#"><li class="app-shell__list-item">
+                <span>{{ $company->name }}</span>
+            </li></a>
+        @endforeach
+        </ul>
+    @else
+        <span>Nenhuma empresa cadastrada.</span>
+    @endif
 @endsection
 
 @section('floating-buttons')

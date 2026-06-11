@@ -7,11 +7,7 @@ use App\Http\Controllers\CompaniesController;
 use App\Http\Controllers\MarketplacesController;
 use App\Http\Controllers\ReportsController;
 
-//Route::get('/', function () {
-//    return view('welcome');
-//});
-
-Route::get('/', [HomeController::class, 'homepage'])->name('homepage');
+Route::get('/', [ProductsController::class, 'index'])->name('homepage');
 
 Route::get('/products', [ProductsController::class, 'index'])->name('products.index');
 Route::get('/products/create', [ProductsController::class, 'create'])->name('products.create');
@@ -27,3 +23,4 @@ Route::get('/companies', [CompaniesController::class, 'index'])->name('companies
 Route::get('/marketplaces', [MarketplacesController::class, 'index'])->name('marketplaces.index');
 
 Route::get('/reports', [ReportsController::class, 'index'])->name('reports.index');
+Route::get('/report/by-product', [ReportsController::class, 'byProduct'])->name('reports.byProduct');
