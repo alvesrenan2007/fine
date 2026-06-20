@@ -1,15 +1,15 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<p align="center" style=" font-size: 2.2rem; font-weight: 700; color: var(--color-primary-blue); letter-spacing: -0.05rem;">fine</p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## About Fine
+
+Fine (recursive acronym for "Fine Is Not an Erp") is an open source finance management tool under development. The project serves the purpose of fulfilling a prototype class assignment on the brazilian university "Universidade Positivo".
+The main proposition is to offer an interactive pricing interface that helps inexperienced entrepreneurs negotiate with suppliers and find a adequate final price for their products, specially in the reselling of goods through e-commerce.
+The first stage of the project consists on building a tool capable of completely replacing an ERP in Brazil, following brazilian laws, conventions and business rules.
+The second stage of the project consists on it's abstraction to be fully customizable and deployable in any country.
 
 ## About Laravel
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Laravel is a web application framework with expressive, elegant syntax, taking the pain out of development by easing common tasks used in many web projects, such as:
 
 - [Simple, fast routing engine](https://laravel.com/docs/routing).
 - [Powerful dependency injection container](https://laravel.com/docs/container).
@@ -19,40 +19,52 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 - [Robust background job processing](https://laravel.com/docs/queues).
 - [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Assets
 
-## Learning Laravel
+The project currently doesn't have image or video assets, relying solely on stylesheets and scripts to conjure up it's visual appearance. Once we are ready to implement asset files, this section will be used to register information about where the assets are stored and how they are synced between development environments.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Structure
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+The project follows the [MVC Pattern](https://developer.mozilla.org/en-US/docs/Glossary/MVC), as it's implemented by the [Laravel Framework](https://laravel.com/docs).
+Our stack includes the Laravel Blade as the frontend renderer, PHP as the backend language, MySQL as the database engine and NGINX as the proxy server.
+Database tables are represented as models at `app/Models/`, while the backend logic can be defined inside of service classes a `app/Services/` and organized by the controllers at `app/Http/Controllers/`. The frontend views are written in `blade.php` files at `resource/views/` and everything is routed with rules defined at `routes/web.php`.
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+The laravel structure can be resumed in the follow diagram:
+```mermaid
+graph TD
+    User([User Browser]) -->|HTTP Request| R[Routes: web.php]
+    R -->|Maps to Action| C[Controller]
+    
+    subgraph "Backend"
+    C -->|Uses| S[Service Classes / Helpers]
+    S -->|Queries/Updates| M[Models]
+    M <-->|SQL| DB[(MySQL Database)]
+    end
+    
+    C -->|Passes Data| V[Blade View]
+    V -->|Renders HTML| User
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## Getting started
 
-## Contributing
+For this guide, we'll assume you are using Ubuntu 24. Please, make the necessary adjustments for your operational system.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+1. Clone the repository.
+2. Configure NGINX on your local machine.
+3. Make sure you have php8.3, with all of the essential utilities, installed.
+4. Make sure you have npm 10.9 or a newer version.
+5. Configure the project directory permissions:
+- create a `www-data` group, with your user and nginx's user;
+- change ownership recursively (`chown -R`) of the project directory for your user on the group;
+- set 775 perms (`chmod`) to all directories, recursivelly;
+- set 644 perms (`chmod`) to all files, recursivelly;
+- ensure `storage/` and `bootstrap/cache` remain under the `www-data` group with `chmod g+s`.
+6. Navigate to the project root directory and run `composer install`, `npm install` and `npm run build`.
 
-## Code of Conduct
+## Making changes to the project
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Once again, the steps have Ubuntu 24 in mind and require adjustments for your specific operational system.
 
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+1. Switch to the `dev` branch, pull changes and create a new `feature/feature-name` or `fix/fix-name` branch.
+2. Perform changes, push to origin and open a Pull Request into `dev`:
+- describe on the PR if new assets (such as image files) were used, providing the files and the relative path of each one of them in the local project;
