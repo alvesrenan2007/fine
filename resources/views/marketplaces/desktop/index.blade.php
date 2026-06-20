@@ -9,7 +9,7 @@ Lojas
         <a href="{{ route('products.index')}}">
             <li><button class="header-navigation__btn">Produtos</button></li>
         </a>
-        <a href="{{ route('companies.index')}}">
+        <a href="{{ route('marketplaces.index')}}">
             <li><button class="header-navigation__btn">Empresas</button></li>
         </a>
         <a href="{{ route('marketplaces.index')}}">
@@ -34,7 +34,18 @@ Realize a vinculação com as lojas virtuais onde vende seus produtos
 @endsection
 
 @section('app-shell-workspace')
- <span>Nenhuma loja cadastrada.</span>
+     @if($marketplaces->count() > 0)
+        <ul class="app-shell__list">
+        @foreach($marketplaces as $marketplace)
+            <a href="#"><li class="app-shell__list-item">
+                <span>{{ $marketplace->name }}</span>
+            </li></a>
+        @endforeach
+        </ul>
+    @else
+        <span>Nenhuma loja cadastrada.</span>
+    @endif
+
 @endsection
 
 @section('floating-buttons')
