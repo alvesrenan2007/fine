@@ -1,12 +1,12 @@
 @extends('layouts.main_desktop')
 
 @section('page-title')
-Cadastro de Produto
+Cadastro de Loja
 @endsection
 
 @section('header')
     <ul class="header-navigation__list">
-        <a href="{{ route('products.index')}}">
+        <a href="{{ route('marketplaces.index')}}">
             <li><button class="header-navigation__btn header-navigation__btn--active">Produtos</button></li>
         </a>
         <a href="{{ route('companies.index')}}">
@@ -22,73 +22,38 @@ Cadastro de Produto
 @endsection
 
 @section('app-shell-title')
-Cadastro de Produto
+Cadastro de Loja
 @endsection
 
 @section('app-shell-subtitle')
-Gerencie os produtos de seu inventário
-@endsection
-
-@section('action-buttons')
-<a href="{{ route('categories.create')}}">
-    <button class="action-button action-button--secondary">Cadastrar Categoria de Produto</button>
-</a>
+Edite as informações da Loja {{ $marketplace->name }}
 @endsection
 
 @section('app-shell-workspace')
 <div class="form__input-field">
-    <label class="form__label" for="product_name">Nome do Produto</label>
+    <label class="form__label" for="marketplace_name">Nome da Loja</label>
     <input
         type="text"
-        id="product-name"
-        name="product_name"
+        id="marketplace-name"
+        name="marketplace_name"
         class="form__text-input"
-        placeholder="Nome do produto"
-        value="{{ $product->name }}"
+        placeholder="Nome da loja"
+        value="{{ $marketplace->name }}"
     / >
-    <span id="product-name-error-msg" class="form__error-span"></span>
-</div>
-
-<div class="form__input-field">
-    <label class="form__label" for="product_cost">Custo do Produto</label>
-    <input
-        type="text"
-        id="product-cost"
-        name="product_cost"
-        class="form__text-input"
-        placeholder="R$ 0,00"
-        data-mask-type="currency"
-        value="{{ $product->cost }}"
-    / >
-    <span id="product-cost-error-msg" class="form__error-span"></span>
-</div>
-
-<div class="form__input-field">
-    <label class="form__label" for="product_category">Categoria do Produto</label>
-    <select
-        type="text"
-        id="product-category"
-        name="product_category"
-        class="form__text-input"
-    >
-     @foreach($categories as $category)
-        <option value="{{ $category->id}}" {{ $product->category_id == $category->id ? 'selected' : '' }} >{{ $category->name}}</option>
-     @endforeach
-    </select>
-    <span id="product-category-error-msg" class="form__error-span"></span>
+    <span id="marketplace-name-error-msg" class="form__error-span"></span>
 </div>
 
 {{-- Form with vlidated and converted data --}}
 <div class="form__hidden">
-    <form action="{{ route('products.update', $product->id) }}" method="POST" id="sub-form">
+    <form action="{{ route('marketplaces.update', $marketplace->id) }}" method="POST" id="sub-form">
         @csrf
         @method('POST')
-        <input id="sub-input-product-name" type="text" name="product-name"/>
-        <input id="sub-input-product-cost" type="text" name="product-cost"/>
-        <input id="sub-input-product-category" type="text" name="product-category"/>
+        <input id="sub-input-marketplace-name" type="text" name="marketplace-name"/>
+        <input id="sub-input-marketplace-cost" type="text" name="marketplace-cost"/>
+        <input id="sub-input-marketplace-category" type="text" name="marketplace-category"/>
     </form>
 
-    <form action="{{ route('products.delete', $product->id)}}" method="POST" id="delete-form">
+    <form action="{{ route('marketplaces.delete', $marketplace->id)}}" method="POST" id="delete-form">
         @crsft
         @method('DELETE')
 
@@ -96,7 +61,7 @@ Gerencie os produtos de seu inventário
 </div>
 
 <dialog id="deletion-dialog" class="dialog__dialog">
-    <form id="form-delete" action="{{ route('products.delete', $product->id) }}" method="POST">
+    <form id="form-delete" action="{{ route('marketplaces.delete', $marketplace->id) }}" method="POST">
         @csrf
         @method('DELETE')
         <h2 class="modal__warning-header">Tem certeza que deseja deletar o produto?</h2>
@@ -116,15 +81,15 @@ Gerencie os produtos de seu inventário
 
 
 @section('app-shell-lower-actions')
-    <button id="form-products-create__edit-btn" class="action-button action-button--primary">Salvar Alterações</button>
-    <button id="form-products-create__delete-btn" class="action-button action-button--delete">Deletar Produto</button>
-    <button id="form-products-create__cancel-btn" class="action-button action-button--cancel">Cancelar</button>
+    <button id="form-marketplaces-create__edit-btn" class="action-button action-button--primary">Salvar Alterações</button>
+    <button id="form-marketplaces-create__delete-btn" class="action-button action-button--delete">Deletar Produto</button>
+    <button id="form-marketplaces-create__cancel-btn" class="action-button action-button--cancel">Cancelar</button>
 @endsection
 
 <script type="module">
 
-const registerBtn = document.getElementById('form-products-create__edit-btn');
-const cancelBtn = document.getElementById('form-products-create__cancel-btn');
+const registerBtn = document.getElementById('form-marketplaces-create__edit-btn');
+const cancelBtn = document.getElementById('form-marketplaces-create__cancel-btn');
 const subForm = document.getElementById('sub-form');
 
 // Validation, conversions and submission
@@ -132,16 +97,16 @@ registerBtn.addEventListener('click', function(){
     let isDataValid = true;
 
     // Validation Stage
-    const nameInput = document.getElementById('product-name');
-    const nameErrorSpan = document.getElementById('product-name-error-msg');
+    const nameInput = document.getElementById('marketplace-name');
+    const nameErrorSpan = document.getElementById('marketplace-name-error-msg');
     nameErrorSpan.innerText = '';
 
-    const costInput = document.getElementById('product-cost');
-    const costErrorSpan = document.getElementById('product-cost-error-msg');
+    const costInput = document.getElementById('marketplace-cost');
+    const costErrorSpan = document.getElementById('marketplace-cost-error-msg');
     costErrorSpan.innerText = '';
 
-    const categorySelect = document.getElementById('product-category');
-    const categoryErrorSpan = document.getElementById('product-category-error-msg');
+    const categorySelect = document.getElementById('marketplace-category');
+    const categoryErrorSpan = document.getElementById('marketplace-category-error-msg');
     categoryErrorSpan.innerText = '';
 
     if(nameInput.value == ''){
@@ -151,9 +116,9 @@ registerBtn.addEventListener('click', function(){
 
     // Conversion and Submission Stages
     if(isDataValid){
-        const subInputName = document.getElementById('sub-input-product-name');
-        const subInputCost = document.getElementById('sub-input-product-cost');
-        const subInputCategory = document.getElementById('sub-input-product-category');
+        const subInputName = document.getElementById('sub-input-marketplace-name');
+        const subInputCost = document.getElementById('sub-input-marketplace-cost');
+        const subInputCategory = document.getElementById('sub-input-marketplace-category');
 
         subInputName.value = nameInput.value;
         subInputCost.value = window.AppUtils.currency.formatFloat(costInput.value);
@@ -166,11 +131,11 @@ registerBtn.addEventListener('click', function(){
 });
 
 cancelBtn.addEventListener('click', function(){
-        window.location.href = "/products";
+        window.location.href = "/marketplaces";
     });
 
     // Handling the delete button
-    const deleteBtn = document.getElementById('form-products-create__delete-btn');
+    const deleteBtn = document.getElementById('form-marketplaces-create__delete-btn');
     const deletionDialog = document.getElementById('deletion-dialog');
     const deletionDialogCancelBtn = document.getElementById('deletion-dialog-cancel-btn');
 
