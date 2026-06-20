@@ -64,12 +64,22 @@ Simule o preço de {{ $product->name }} em diversos lugares.
     @foreach($marketplaces as $marketplace)
         <div class="card-column card-column--right">
             <h1 class="card-column__title">{{ $marketplace->name }}</h1>
+            <input type="hidden" class="marketplace-id-input" data-marketplace-id="{{ $marketplace->id }}"/>
+            <div class="form__input-field--horizontal">
+                <label class="form__label">Custos Adicionais</label>
+                <input
+                    type="text"
+                    id="additional-costs-{{ $marketplace->id}}"
+                    class="form__text-input"
+                    placeholder="R$ 0,00"
+                    data-mask-type="currency"
+                / >
+            </div>
             <div class="form__input-field--horizontal">
                 <label class="form__label">Taxa da Loja</label>
                 <input
                     type="text"
                     id="marketplace-fee-{{ $marketplace->id }}"
-                    data-marketplace-id="{{ $marketplace->id }}"
                     class="form__text-input marketplace-fee-input"
                     placeholder="Entre 0 e 1, sendo 1 igual a 100%"
                     value="{{ $marketplace->fee($product->category, 0.1650) }}"
@@ -79,8 +89,7 @@ Simule o preço de {{ $product->name }} em diversos lugares.
                 <label class="form__label">Preço de Venda</label>
                 <input
                     type="text"
-                    id="sell-price"
-                    data-marketplace-id="{{ $marketplace->id }}"
+                    id="sell-price-{{ $marketplace->id}}"
                     class="form__text-input"
                     placeholder="R$ 0,00"
                     value=""
@@ -92,7 +101,6 @@ Simule o preço de {{ $product->name }} em diversos lugares.
                 <input
                     type="text"
                     id="profit-margin-{{ $marketplace->id }}"
-                    data-marketplace-id="{{ $marketplace->id }}"
                     class="form__text-input"
                     placeholder="Entre 0 e 1, sendo 1 igual a 100%"
                     value="1.000"
@@ -147,21 +155,51 @@ Simule o preço de {{ $product->name }} em diversos lugares.
 
 <script type="module">
 
+    // ------------
+    // | Class Declarations and Function Definitions (needs refactoring)
+    // ------------
+
+    class PricingService {
+
+        constructor(){}
+
+        /**
+         * Returns the sell price given tha all other values are locked
+         * and using the formula 'sellPrice = absoluteValues/(1-relativeValues)'
+         * @param {float} productCost (absolute value)
+         * @param {float} additionalCosts (absolute value)
+         * @param {float} taxFee (relative value)
+         * @param {float} marketplaceFee (relative value)
+         * @param {float} profitMargin (relative value)
+         */
+        calculateSellPrice(prouctCost, additionalCosts, taxFee, marketplaceFee, profitMargin){
+            let numerator = productCost + additionalCosts;
+            let denominator = 1 - taxFee - marketplaceFee - profitMargin;
+
+            if(denominator == 0){
+                    return 0.0;
+            }
+
+            return numerator/denominator;
+        }
+    }
+
+    // ------------
+    // | Main script flow
+    // -----------;-
+
     const costInput = document.getElementById('product-cost');
     const taxInput = document.getElementById('tax-fee');
-    
-    const feeInputs = document.querySelectorAll('.marketplace-fee-input');
 
-    feeInputs.forEach(input => {
-        // Get the raw value
-        const feeValue = parseFloat(input.value) || 0;
-        
-        // Get the unique ID if you need to associate it back to a specific marketplace
-        const marketplaceId = input.dataset.marketplaceId; 
-        
-        console.log(`Marketplace ID ${marketplaceId} has a fee of ${feeValue}`);
-        
-        // Run your calculation logic here per marketplace
+    const marketplaceIdInputs = document.querySelectorAll('.marketplace-id-input');
+
+    // Initializing sellPrice for each marketplace block
+    marketplaceIdInputs .forEach(input => {
+        let marketplaceId = input.dataset.marketplace-id;
+        const additionalCostsInput = document.getElementById('additionalCosts' + marketplaceId);
+        const marketplaceFeeInput = document.getEleentById('marketplace-fee' + marketplaceId);
+        const proftitMarginInput = document.getEleentById('');
+        const sellPriceInput = document.getEleentById('');
     });
 
 </script>
