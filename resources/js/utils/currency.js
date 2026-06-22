@@ -1,15 +1,15 @@
-export function formatFloat(imaskString){
-    if(!imaskString){ return 0.0; }
+export function formatFloat(imaskString) {
+    if (!imaskString) { return 0.0; }
 
-    let cleaned = imaskString.replace(/[^\d.,]/g,'');
-    cleaned.replace(',' , '.');
+    // Remove everything except digits, commas and dots
+    let cleaned = imaskString.replace(/[^\d.,]/g, '');
+
+    // Remove thousands separator (dot) then convert decimal comma to dot
+    cleaned = cleaned.replace(/\./g, '').replace(',', '.');
+
     const result = parseFloat(cleaned);
 
-    if(isNaN(result)){
-        return 0.0;
-    } else {
-        return result;
-    }
+    return isNaN(result) ? 0.0 : result;
 }
 
 export function formatInt(imaskString){

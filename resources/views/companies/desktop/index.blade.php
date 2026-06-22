@@ -34,17 +34,49 @@ Gerencie suas empresas
 @endsection
 
 @section('app-shell-workspace')
-     @if($companies->count() > 0)
-        <ul class="app-shell__list">
-        @foreach($companies as $company)
-            <a href="#"><li class="app-shell__list-item">
-                <span>{{ $company->name }}</span>
-            </li></a>
-        @endforeach
-        </ul>
-    @else
-        <span>Nenhuma empresa cadastrada.</span>
-    @endif
+    <div class="table-container">
+        <div class="table-container__header">
+            <h2 class="table-container__title">Produtos Cadastrados</h2>
+            <span class="table-container__count">{{ $companies->count() }} {{ $companies->count() === 1 ? 'produto encontrado' : 'produtos encontrados' }}</span>
+        </div>
+
+        @if($companies->count() > 0)
+            <table class="index-table">
+                <thead>
+                    <tr>
+                        <th>Nome da Empresa</th>
+                        <th class="text-right">Taxa de Imposto</th>
+                        <th class="text-right">Margem de Lucro</th>
+                        <th class="text-right">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($companies as $company)
+                        <tr>
+                            <td>
+                                <span class="product-name">{{ $company->name }}</span>
+                            </td>
+                            <td class="text-right font-mono">
+                                <span class="text-right font-mono">{{ number_format($company->tax_fee * 100, 2, ',', '.') . ' %' ?? '10.00 %' }}</span>
+                            </td>
+                            <td class="text-right font-mono">
+                                <span class="text-right font-mono">{{ number_format($company->profit_margin * 100, 2, ',', '.') . ' %' ?? '10.00 %' }}</span>
+                            </td>
+                            <td class="text-right">
+                                    Editar
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @else
+            <div class="empty-state">
+                <div class="empty-state__icon">📦</div>
+                <h3 class="empty-state__title">Nenhuma empresa cadastrada</h3>
+                <p class="empty-state__subtitle">Comece adicionando sua primeira empresa no sistema.</p>
+            </div>
+        @endif
+    </div>
 @endsection
 
 @section('floating-buttons')

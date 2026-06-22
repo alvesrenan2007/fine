@@ -1,0 +1,155 @@
+@extends('layouts.main_desktop')
+
+@section('page-title')
+Relatórios
+@endsection
+
+@section('header')
+    <ul class="header-navigation__list">
+        <a href="{{ route('products.index')}}">
+            <li><button class="header-navigation__btn">Produtos</button></li>
+        </a>
+        <a href="{{ route('companies.index')}}">
+            <li><button class="header-navigation__btn">Empresas</button></li>
+        </a>
+        <a href="{{ route('marketplaces.index')}}">
+            <li><button class="header-navigation__btn">Lojas</button></li>
+        </a>
+        <a href="{{ route('reports.index')}}">
+            <li><button class="header-navigation__btn header-navigation__btn--active">Relatórios</button></li>
+        </a>
+    </ul>
+@endsection
+
+@section('app-shell-title')
+Simulação de Preços
+@endsection
+
+@section('app-shell-subtitle')
+Simule o preço de {{ $product->name }} em diversos lugares.
+@endsection
+
+@section('action-buttons')
+    <a href="{{ route('reports.index') }}">
+        <button class="action-button action-button--secondary">Voltar</button>
+    </a>
+@endsection
+
+@section('app-shell-workspace')
+<div id="error-banner"></div>
+
+<fieldset>
+  <legend>Global</legend>
+  <label>Product cost: <input type="text" id="product-cost" data-mask-type="currency" value="{{ $product->cost}}"/></label>
+  <label class="lockbox"><input class="form__text-input" type="checkbox" id="product-cost-lock" checked/> locked</label>
+  <br/>
+  <label>Tax fee: <input type="text" id="tax-fee" data-mask-type="percentage" value="{{$company->tax_fee}}"/></label>
+  <label class="lockbox"><input class="form__text-input" type="checkbox" id="tax-fee-lock" checked/> locked</label>
+</fieldset>
+
+<table id="rows-table">
+  <thead>
+    <tr>
+      <th>Marketplace</th>
+      <th>Additional cost</th>
+      <th>Marketplace fee</th>
+      <th>Sell price</th>
+      <th>Profit margin</th>
+    </tr>
+  </thead>
+  <tbody id="rows-body">
+    @foreach($marketplaces as $mp)
+    <tr>
+      <td><strong>{{$mp->name}}</strong></td>
+      <td>
+        <input class="form__text-input" type="text" data-type="additional-cost" data-marketplace-id="{{$mp->id}}" data-mask-type="currency" value="0"/>
+        <label class="lockbox"><input type="checkbox" data-type="input-lock" data-target-type="additional-cost" data-target-id="{{$mp->id}}" checked/> lock</label>
+      </td>
+      <td>
+        <input class="form__text-input" type="text" data-type="marketplace-fee" data-marketplace-id="{{$mp->id}}" data-mask-type="percentage" value="{{$mp->fee}}"/>
+        <label class="lockbox"><input type="checkbox" data-type="input-lock" data-target-type="marketplace-fee" data-target-id="{{$mp->id}}" checked/> lock</label>
+      </td>
+      <td>
+        <input class="form__text-input" type="text" data-type="sell-price" data-marketplace-id="{{$mp->id}}" data-mask-type="currency" value="0"/>
+        <label class="lockbox"><input type="checkbox" data-type="input-lock" data-target-type="sell-price" data-target-id="{{$mp->id}}"/> lock</label>
+      </td>
+      <td>
+        <input class="form__text-input" type="text" data-type="profit-margin" data-marketplace-id="{{$mp->id}}" data-mask-type="percentage" value="{{$company->profit_margin}}"/>
+        <label class="lockbox"><input type="checkbox" data-type="input-lock" data-target-type="profit-margin" data-target-id="{{$mp->id}}" checked/> lock</label>
+      </td>
+    </tr>
+    @endforeach
+  </tbody>
+</table>
+
+@endsection
+
+@section('floating-buttons')
+@endsection
+
+<style>
+    .card-column__title{
+        font-size: 2rem;
+        font-weight: 600;
+    }
+
+    .form__label{
+        font-size: 2rem !important;
+    }
+
+    .form__text-input{
+        background-color: white;
+        font-size: 2rem !important;
+    }
+</style>
+
+<script type="module">
+  const marketplaceIds = marketplaces.map((m) => m.id);
+
+  const errorBanner = document.getElementById("error-banner");
+
+  const lockState = new LockStateManager({
+    marketplaceIds,
+    onChange: (state) => {
+      renderDebug(state);
+      refreshLockColors();
+    },
+  });
+
+  const simulator = new PriceSimulator({
+    lockState,
+    onError: (err) => {
+      errorBanner.style.display = "block";
+      errorBanner.textContent = `⚠ ${err.message} ${err.details ? JSON.stringify(err.details) : ""}`;
+    },
+  });
+
+  simulator.initialize();
+
+  // Clear the error banner whenever a value input is edited again (best-effort UX).
+  document.querySelectorAll('input[type="text"]').forEach((input) => {
+    input.addEventListener("focus", () => {
+      errorBanner.style.display = "none";
+    });
+  });
+
+  window.simulator = simulator;
+  window.lockState = lockState;
+
+  function refreshLockColors() {
+    document.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+      let input = cb.closest("td")?.querySelector('input[type="text"]');
+      if (!input) {
+        if (cb.id === "product-cost-lock") input = document.querySelector("#product-cost");
+        if (cb.id === "tax-fee-lock") input = document.querySelector("#tax-fee");
+      }
+      if (input) {
+        input.classList.toggle("locked", cb.checked);
+        input.classList.toggle("unlocked", !cb.checked);
+      }
+    });
+  }
+  refreshLockColors();
+  renderDebug(lockState.getState());
+
+</script>

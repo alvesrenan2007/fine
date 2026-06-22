@@ -34,33 +34,56 @@ Gere seus relatórios e realize suas simulações de preços
 @endsection
 
 @section('app-shell-workspace')
-<form action="{{ route('reports.byProduct') }}" method="GET">
-    @csrf
-    @method('GET')
-
-    <div class="card__item">
-        <span class="card__title">Simulação por Produto de </span>
-        <select name="query-product" class="form__text-input">
-            @foreach($products as $product)
-                <option value="{{ $product->id }}">{{ $product->name }}</option>
-            @endforeach
-        </select>
-        <span class="card__title"> na empresa </span>
-        <select name="query-company" class="form__text-input">
-            @foreach($companies as $company)
-                <option value="{{ $company->id }}">{{ $company->name }}</option>
-            @endforeach
-        </select>
-        <span class="card__title"> na loja </span>
-        <select name="query-marketplace" class="form__text-input">
-                <option value="0">Todas as lojas</option>
-        </select>
-        <button type="submit" class="action-button action-button--primary">Simular</button>
+<div class="form-card">
+    <div class="form-card__header">
+        <h2 class="form-card__title">Configuração da Simulação</h2>
+        <p class="form-card__subtitle">Selecione os parâmetros abaixo para gerar o relatório de preços.</p>
     </div>
-</form>
-@endsection
 
-@section('floating-buttons')
+    <form action="{{ route('reports.byProduct') }}" method="GET" class="form-card__body">
+        @csrf
+        {{-- Note: @method('GET') is redundant on a GET form, but kept safe if needed --}}
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="query-product" class="form-group__label">Produto</label>
+                <div class="form-group__input-wrapper">
+                    <select name="query-product" id="query-product" class="form__select-input">
+                        @foreach($products as $product)
+                            <option value="{{ $product->id }}">{{ $product->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="query-company" class="form-group__label">Empresa</label>
+                <div class="form-group__input-wrapper">
+                    <select name="query-company" id="query-company" class="form__select-input">
+                        @foreach($companies as $company)
+                            <option value="{{ $company->id }}">{{ $company->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="query-marketplace" class="form-group__label">Loja / Marketplace</label>
+                <div class="form-group__input-wrapper">
+                    <select name="query-marketplace" id="query-marketplace" class="form__select-input">
+                        <option value="0">Todas as lojas</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-card__footer">
+            <button type="submit" class="action-button action-button--primary form-card__submit-btn">
+                <span>Simular Preços</span>
+            </button>
+        </div>
+    </form>
+</div>
 @endsection
 
 <style>

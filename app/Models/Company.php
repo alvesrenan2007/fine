@@ -9,7 +9,8 @@ class Company extends Model
     protected $fillable = [
         'name',
         'cnpj',
-        'imposto',
+        'tax_fee',
+        'profit_margin'
     ];
 
 }
