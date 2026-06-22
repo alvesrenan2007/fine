@@ -1,9 +1,14 @@
 import IMask from 'imask';
 import * as currencyUtils from './utils/currency.js';
+import { PriceSimulator } from './utils/PriceSimulator.js';
+import { LockStateManager } from './utils/LockStateManager.js';
 
 window.AppUtils = {
     currency: currencyUtils
 };
+
+window.PriceSimulator = PriceSimulator;
+window.LockStateManager = LockStateManager;
 
 // 1. Core function to apply the mask to a single element
 function applyMask(element) {

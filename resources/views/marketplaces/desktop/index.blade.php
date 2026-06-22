@@ -30,7 +30,9 @@ Realize a vinculação com as lojas virtuais onde vende seus produtos
 @endsection
 
 @section('action-buttons')
+<a href="{{ route('marketplaces.create')}}">
     <button class="action-button action-button--secondary">Vincular Loja</button>
+</a>
 @endsection
 
 @section('app-shell-workspace')
