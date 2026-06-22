@@ -30,3 +30,4 @@ Route::delete('/marketplace/delete/{marketplace_id}', [MarketplacesController::c
 
 Route::get('/reports', [ReportsController::class, 'index'])->name('reports.index');
 Route::get('/report/by-product', [ReportsController::class, 'byProduct'])->name('reports.byProduct');
+Route::get('/report/demo/{company_id}/{product_id}', [ReportsController::class, 'demo'])->name('reports.demo');

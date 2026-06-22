@@ -18,7 +18,7 @@ class ProductSeeder extends Seeder
             // Category 1: Bicicletas
             [
             'name' => 'Bicicleta Aro 29 Mountain Bike Alumínio 21V',
-            'cost' => 1299.90,
+            'cost' => 129.90,
             'category_id' => 1
             ],
             [

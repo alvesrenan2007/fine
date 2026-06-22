@@ -89,7 +89,7 @@ Gerencie os produtos de seu inventário
     </form>
 
     <form action="{{ route('products.delete', $product->id)}}" method="POST" id="delete-form">
-        @crsft
+        @csrf
         @method('DELETE')
 
     </form>
@@ -122,71 +122,75 @@ Gerencie os produtos de seu inventário
 @endsection
 
 <script type="module">
+window.addEventListener('app:ready', () => {
 
-const registerBtn = document.getElementById('form-products-create__edit-btn');
-const cancelBtn = document.getElementById('form-products-create__cancel-btn');
-const subForm = document.getElementById('sub-form');
+    const registerBtn = document.getElementById('form-products-create__edit-btn');
+    const cancelBtn = document.getElementById('form-products-create__cancel-btn');
+    const subForm = document.getElementById('sub-form');
 
-// Validation, conversions and submission
-registerBtn.addEventListener('click', function(){
-    let isDataValid = true;
+    // Validation, conversions and submission
+    registerBtn.addEventListener('click', function(){
+        let isDataValid = true;
 
-    // Validation Stage
-    const nameInput = document.getElementById('product-name');
-    const nameErrorSpan = document.getElementById('product-name-error-msg');
-    nameErrorSpan.innerText = '';
+        // Validation Stage
+        const nameInput = document.getElementById('product-name');
+        const nameErrorSpan = document.getElementById('product-name-error-msg');
+        nameErrorSpan.innerText = '';
 
-    const costInput = document.getElementById('product-cost');
-    const costErrorSpan = document.getElementById('product-cost-error-msg');
-    costErrorSpan.innerText = '';
+        const costInput = document.getElementById('product-cost');
+        const costErrorSpan = document.getElementById('product-cost-error-msg');
+        costErrorSpan.innerText = '';
 
-    const categorySelect = document.getElementById('product-category');
-    const categoryErrorSpan = document.getElementById('product-category-error-msg');
-    categoryErrorSpan.innerText = '';
+        const categorySelect = document.getElementById('product-category');
+        const categoryErrorSpan = document.getElementById('product-category-error-msg');
+        categoryErrorSpan.innerText = '';
 
-    if(nameInput.value == ''){
-        nameErrorSpan.innerText = "Por favor, insira um nome para o produto."
-        isDataValid = false;
-    }
+        if(nameInput.value == ''){
+            nameErrorSpan.innerText = "Por favor, insira um nome para o produto."
+            isDataValid = false;
+        }
 
-    // Conversion and Submission Stages
-    if(isDataValid){
-        const subInputName = document.getElementById('sub-input-product-name');
-        const subInputCost = document.getElementById('sub-input-product-cost');
-        const subInputCategory = document.getElementById('sub-input-product-category');
+        // Conversion and Submission Stages
+        if(isDataValid){
+            const subInputName = document.getElementById('sub-input-product-name');
+            const subInputCost = document.getElementById('sub-input-product-cost');
+            const subInputCategory = document.getElementById('sub-input-product-category');
 
-        subInputName.value = nameInput.value;
-        subInputCost.value = window.AppUtils.currency.formatFloat(costInput.value);
-        subInputCategory.value = window.AppUtils.currency.formatInt(categorySelect.value);
+            subInputName.value = nameInput.value;
+            subInputCost.value = window.AppUtils.currency.formatFloat(costInput.value);
+            subInputCategory.value = window.AppUtils.currency.formatInt(categorySelect.value);
 
-        subForm.submit();
-    }
+            subForm.submit();
+        }
 
 
-});
-
-cancelBtn.addEventListener('click', function(){
-        window.location.href = "/products";
     });
 
-    // Handling the delete button
-    const deleteBtn = document.getElementById('form-products-create__delete-btn');
-    const deletionDialog = document.getElementById('deletion-dialog');
-    const deletionDialogCancelBtn = document.getElementById('deletion-dialog-cancel-btn');
-
-    if(deleteBtn){
-        deleteBtn.addEventListener('click', function(){
-            console.log('showing the modal');
-            deletionDialog.showModal();
+    cancelBtn.addEventListener('click', function(){
+            window.location.href = "/products";
         });
-    }
 
-    if(deletionDialogCancelBtn){
-        deletionDialogCancelBtn.addEventListener('click', function(){
-            deletionDialog.close();
-        });
-    }
+        // Handling the delete button
+        const deleteBtn = document.getElementById('form-products-create__delete-btn');
+        const deletionDialog = document.getElementById('deletion-dialog');
+        const deletionDialogCancelBtn = document.getElementById('deletion-dialog-cancel-btn');
 
+        if(deleteBtn){
+            deleteBtn.addEventListener('click', function(){
+                console.log('showing the modal');
+                deletionDialog.showModal();
+            });
+        }
+
+        if(deletionDialogCancelBtn){
+            deletionDialogCancelBtn.addEventListener('click', function(){
+                deletionDialog.close();
+            });
+        }
+
+    const maskInit = new window.MaskInitializer;
+    maskInit.formatInputsOnLoad();
+});
 </script>
 
 <style>
