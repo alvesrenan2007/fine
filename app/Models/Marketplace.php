@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Marketplace extends Model
 {
@@ -16,4 +18,5 @@ class Marketplace extends Model
             ->where('category_id', $category->id)
             ->value('value') ?? $default;
     }
-}
+
+} // end of model

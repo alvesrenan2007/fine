@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Marketplace;
+use App\Models\MarketplaceFee;
 use Illuminate\Http\Request;
 
 class MarketplacesController extends Controller
@@ -14,6 +16,16 @@ class MarketplacesController extends Controller
     public function index()
     {
         $marketplaces = Marketplace::all();
+        $categories = Category::all();
+        $marketplaces->map(function($marketplace) use($categories){
+            $marketplace->fees = MarketplaceFee::where('marketplace_id', $marketplace->id)
+                ->get()
+                ->map(function($fee) use ($categories){
+                    $fee->category_name = $categories->get($fee->category_id)?->name ?? 'Categoria Desconhecida';
+                    return $fee;
+                });
+                return $marketplace;
+        });
         return view('marketplaces.desktop.index', compact('marketplaces'));
     }
 
