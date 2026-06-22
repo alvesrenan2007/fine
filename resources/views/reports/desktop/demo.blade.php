@@ -138,6 +138,8 @@
     },
   });
 
+  simulator.initialize();
+
   // Clear the error banner whenever a value input is edited again (best-effort UX).
   document.querySelectorAll('input[type="text"]').forEach((input) => {
     input.addEventListener("focus", () => {

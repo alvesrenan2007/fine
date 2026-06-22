@@ -34,6 +34,9 @@ class ReportsController extends Controller
         // If there is no specific company or marketplace, prepare the collections with all of them
         $companies = $company ? collect() : Companies::all();
         $marketplaces = $marketplace ? collect() : Marketplace::all();
+        $marketplaces->map(function($mp) use($product) {
+            $mp->fee = $mp->fee($product->category);
+        });
 
         return view('reports.desktop.by_product', compact('product', 'company', 'marketplace', 'companies', 'marketplaces'));
     }

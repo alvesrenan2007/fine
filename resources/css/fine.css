@@ -1,5 +1,6 @@
 /* ==========================================================================
-   CSS Reset & Fluid Root | Written by Gemini 3 Pro
+   CSS Reset & Fluid Root
+   Written by Gemini 3.1 Pro via web chat
    ========================================================================== */
 * {
     margin: 0;
@@ -9,40 +10,40 @@
 }
 
 html {
-    /* Magic number for fluid scaling:
-       10px / 1920px (HD width) * 100 = 0.520833vw
-       This means 1rem = 10px on a 1920px screen, and 20px on a 3840px (4K) screen. */
-    font-size: 0.520833vw;
+    font-size: 0.520833vw; /* Fluid scale */
 }
 
 body {
-    background-color: #F0F4F8; /* Light blue-grey minimalist background */
-    color: #1E293B;
+    background-color: #F8FAFC; /* Slightly cooler, cleaner gray-white */
+    color: #0F172A;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
 }
 
 /* ==========================================================================
-   Variables (Minimalist Blue Palette)
+   Variables (ERP Emerald/Forest Green Palette)
    ========================================================================== */
 :root {
-    --color-primary-blue: #0A66C2;
-    --color-hover-blue: #004182;
-    --color-light-blue: #E1EFFE;
+    --color-primary-green: #047857; /* Emerald 700 */
+    --color-hover-green: #065F46;   /* Emerald 800 */
+    --color-light-green: #D1FAE5;   /* Emerald 100 */
     --color-white: #FFFFFF;
-    --color-text-main: #1E293B;
-    --color-text-muted: #64748B;
-    --color-cancel-gray: #7C7C7D;
-    --color-hover-gray: #8C8C8C;
-    --color-light-gray: #e6e6e6;
-    --color-error-red: #D32F2F;
-    --color-hover-red: #B72727;
 
-    --radius-block: 1.2rem;
-    --radius-button: 0.6rem;
-    --shadow-soft: 0 0.4rem 1.2rem rgba(10, 102, 194, 0.08);
-    --shadow-float: 0 0.8rem 2.4rem rgba(10, 102, 194, 0.15);
+    --color-text-main: #0F172A;     /* Slate 900 */
+    --color-text-muted: #64748B;    /* Slate 500 */
+    --color-border: #E2E8F0;        /* Slate 200 */
+
+    --color-cancel-gray: #94A3B8;
+    --color-hover-gray: #64748B;
+    --color-light-gray: #F1F5F9;
+    --color-error-red: #DC2626;
+    --color-hover-red: #B91C1C;
+
+    --radius-block: 0.8rem;
+    --radius-button: 0.4rem;
+    --shadow-soft: 0 0.4rem 0.8rem rgba(0, 0, 0, 0.04);
+    --shadow-float: 0 0.8rem 2.4rem rgba(4, 120, 87, 0.2);
 }
 
 /* ==========================================================================
@@ -54,20 +55,20 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: var(--shadow-soft);
+    border-bottom: 1px solid var(--color-border);
     z-index: 10;
 }
 
 .header-main__brand {
     font-size: 2.2rem;
     font-weight: 700;
-    color: var(--color-primary-blue);
+    color: var(--color-primary-green);
     letter-spacing: -0.05rem;
 }
 
 .header-navigation__list {
     display: flex;
-    gap: 1.2rem;
+    gap: 0.8rem;
     list-style: none;
 }
 
@@ -84,33 +85,18 @@ body {
 }
 
 .header-navigation__btn:hover {
-    background-color: var(--color-light-blue);
-    color: var(--color-primary-blue);
+    background-color: var(--color-light-gray);
+    color: var(--color-text-main);
 }
 
 .header-navigation__btn--active {
-    background-color: var(--color-light-blue);
-    color: var(--color-primary-blue);
+    background-color: var(--color-light-green);
+    color: var(--color-primary-green);
     font-weight: 600;
 }
 
 /* ==========================================================================
-   Status Bar
-   ========================================================================== */
-
-.status-bar__error{
-    background-color: var(--color-error-red);
-    color: white;
-    padding: 1rem;
-}
-
-.status-bar__error li {
-    font-weight: 600;
-    font-size: 1.5rem;
-}
-
-/* ==========================================================================
-   App Shell Component
+   App Shell & Workspace
    ========================================================================== */
 .app-shell {
     flex: 1;
@@ -118,7 +104,6 @@ body {
     display: flex;
     flex-direction: column;
     gap: 2.4rem;
-    position: relative;
 }
 
 .app-shell__header {
@@ -130,6 +115,7 @@ body {
 .app-shell__title {
     font-size: 2.8rem;
     font-weight: 600;
+    color: var(--color-text-main);
 }
 
 .app-shell__subtitle {
@@ -142,49 +128,18 @@ body {
     background-color: var(--color-white);
     border-radius: var(--radius-block);
     padding: 3.2rem;
+    border: 1px solid var(--color-border);
     box-shadow: var(--shadow-soft);
     min-height: 50vh;
-    display: grid;
-    /* grid-template-columns: repeat(3, 1fr); */
-    gap: 2.4rem;
-}
-
-.app-shell__list{
-    display: flex;
-    flex-direction: column;
-    padding: 1rem;
-    gap: 1rem;
-}
-
-.app-shell__list-item{
-    color: var(--color-text-main)
-    padding: 0.2rem;
-    border-bottom: 1px solid rgb(0 0 100 / 0.2);
-}
-
-.app-shell__list-item span{
-    font-size: 1.5rem;
-    font-weight: 400;
-}
-
-.app-shell__list-item:hover{
-    color: var(--color-text-muted);
-}
-
-.app-shell__lower-actions{
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    gap: 1rem;
 }
 
 /* ==========================================================================
    Action Buttons
    ========================================================================== */
 .action-button {
-    padding: 1.2rem 2.4rem;
+    padding: 1rem 2rem;
     font-size: 1.4rem;
-    font-weight: 600;
+    font-weight: 500;
     border-radius: var(--radius-button);
     border: 0.1rem solid transparent;
     cursor: pointer;
@@ -192,175 +147,147 @@ body {
 }
 
 .action-button--primary {
-    background-color: var(--color-primary-blue);
+    background-color: var(--color-primary-green);
     color: var(--color-white);
 }
 
 .action-button--primary:hover {
-    background-color: var(--color-hover-blue);
+    background-color: var(--color-hover-green);
 }
 
 .action-button--secondary {
     background-color: var(--color-white);
-    color: var(--color-primary-blue);
-    border-color: var(--color-primary-blue);
+    color: var(--color-text-main);
+    border-color: var(--color-border);
 }
 
 .action-button--secondary:hover {
-    background-color: var(--color-light-blue);
+    background-color: var(--color-light-gray);
+    border-color: var(--color-text-muted);
 }
 
-.action-button--cancel{
-    background-color: var(--color-cancel-gray);
-    color: var(--color-white);
+/* ==========================================================================
+   Forms & Controls (NEW ERP STYLES)
+   ========================================================================== */
+.control-panel {
+    background-color: var(--color-light-gray);
+    border-radius: var(--radius-block);
+    padding: 2.4rem;
+    margin-bottom: 3.2rem;
+    display: flex;
+    gap: 4.8rem;
+    border: 1px solid var(--color-border);
 }
 
-.action-button--cancel:hover {
-    background-color: var(--color-hover-gray);
+.control-panel__group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
 }
 
-.action-button--delete{
+.control-panel__group h2 {
+    font-size: 1.8rem;
+    margin-bottom: 0.8rem;
+    color: var(--color-text-main);
+}
+
+.control-panel__row {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+}
+
+.form__label {
+    color: var(--color-text-muted);
+    font-weight: 500;
+    font-size: 1.3rem;
+    min-width: 10rem;
+}
+
+.form__text-input {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-button);
+    padding: 0.8rem 1.2rem;
+    font-size: 1.4rem;
+    width: 100%;
+    max-width: 16rem;
+    color: var(--color-text-main);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+}
+
+.form__text-input:focus {
+    border-color: var(--color-primary-green);
+    box-shadow: 0 0 0 3px var(--color-light-green);
+}
+
+.form__text-input.unlocked {
+    background-color: var(--color-light-green);
+    color: var(--color-text-muted);
+    cursor: not-allowed;
+}
+
+.lockbox {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 1.2rem;
+    color: var(--color-text-muted);
+    cursor: pointer;
+}
+
+/* ==========================================================================
+   Data Table (NEW ERP STYLES)
+   ========================================================================== */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.data-table th {
+    padding: 1.6rem 1.2rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    border-bottom: 2px solid var(--color-border);
+}
+
+.data-table td {
+    padding: 1.2rem;
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: middle;
+}
+
+.data-table tbody tr:hover {
+    background-color: var(--color-light-gray);
+}
+
+.data-table strong {
+    font-weight: 600;
+    color: var(--color-text-main);
+}
+
+/* Compact inputs for tables */
+.data-table .form__text-input {
+    max-width: 12rem;
+    padding: 0.6rem 1rem;
+}
+
+.data-table .table-cell-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+}
+
+/* Error Banner */
+#error-banner {
+    display: none;
     background-color: var(--color-error-red);
     color: var(--color-white);
-}
-
-.action-button--delete:hover {
-    background-color: var(--color-hover-red);
-}
-
-/* ==========================================================================
-   Floating Mass-Edit Component
-   ========================================================================== */
-.floating-mass {
-    position: fixed;
-    bottom: 4.8rem;
-    right: 4.8rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.6rem;
-    z-index: 100;
-}
-
-.floating-mass__btn {
-    width: 6.4rem;
-    height: 6.4rem;
-    border-radius: 50%;
-    border: none;
-    background-color: var(--color-primary-blue);
-    color: var(--color-white);
-    font-size: 2.4rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: var(--shadow-float);
-    cursor: pointer;
-    transition: transform 0.2s ease, background-color 0.2s ease;
-}
-
-.floating-mass__btn:hover {
-    transform: translateY(-0.4rem);
-    background-color: var(--color-hover-blue);
-}
-
-.floating-mass__btn--secondary {
-    background-color: var(--color-white);
-    color: var(--color-primary-blue);
-    width: 5.6rem;
-    height: 5.6rem;
-    align-self: flex-end;
-}
-
-.floating-mass__btn--secondary:hover {
-    background-color: var(--color-light-blue);
-}
-
-/* ==========================================================================
-   Form style rules
-   ========================================================================== */
-
-.form__hidden{
-    display: none;
-}
-
-.form__input-field{
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-}
-
-.form__label{
-    color: var(--color-text-muted);
-    font-weight: 600;
-    font-size: 1.2rem;
-    }
-
-.form__text-input{
-   /*border: 2px solid #E1EFFE;*/
-   border: 2px solid;
-   border-color: var(--color-light-blue);
-   border-radius: 5px;
-   padding: 0.75rem;
-   font-size: 1.2rem;
-   width: 50%;
-    }
-
-.form__text-input:hover{
-        border-color: var(--color-hover-blue);
-    }
-
-.form__error-span{
-    color: red;
-}
-
-/* ==========================================================================
-   Modals and dialogs
-   ========================================================================== */
-
-.modal{
-    display: none;
-    position: fixed;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.9);
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 50;
-}
-
-.modal[aria-hidden="true"] {
-    display: none;
-}
-
-.modal[aria-hidden="false"] {
-    display: flex;
-}
-
-.modal form {
-    background-color: white;
-    border-radius: 0.5rem;
-    padding: 1.5rem;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-    width: 90%;
-    max-width: 28rem;
-}
-
-.modal__actions-container{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-
-.modal__warning-header{
-    color: red;
-    font-weight: 600;
-}
-.modal__warning-body{
-    color: darkgrey;
-    margin-bottom: 1rem;
-}
-
-.dialog__dialog{
-    margin: auto;
-    padding: 2rem;
-    border-radius: 5px;
+    padding: 1.2rem 1.6rem;
+    border-radius: var(--radius-block);
+    margin-bottom: 2.4rem;
+    font-weight: 500;
+    font-size: 1.4rem;
 }

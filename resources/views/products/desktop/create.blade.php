@@ -95,6 +95,7 @@ Gerencie os produtos de seu inventário
 @endsection
 
 <script type="module">
+window.addEventListener('app:ready', () => {
 
 const registerBtn = document.getElementById('form-products-create__register-btn');
 const cancelBtn = document.getElementById('form-products-create__cancel-btn');
@@ -142,6 +143,9 @@ cancelBtn.addEventListener('click', function(){
         window.location.href = "/products";
     });
 
+    const maskInit = new window.MaskInitializer;
+    maskInit.formatInputsOnLoad();
+});
 </script>
 
 <style>

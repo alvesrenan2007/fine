@@ -181,7 +181,14 @@ export class PriceSimulator {
   _getValue(field, marketplaceId) {
     const el = this._getInputEl(field, marketplaceId);
     if (!el) return null;
-    return Mask.unmask(el.value, this._getMaskType(field));
+    const raw = el.value;
+
+    // If already a plain number (unmasked on initial load), return it directly
+    if (raw !== "" && !isNaN(Number(raw))) {
+        return Number(raw);
+    }
+
+    return Mask.unmask(raw, this._getMaskType(field));
   }
 
   _setValue(field, marketplaceId, numValue) {
@@ -223,14 +230,10 @@ export class PriceSimulator {
         return denom === 0 ? null : (PC + AC) / denom;
       }
       case "product-cost":
-        console.log('SP * (1 - TF - MF - PM) - AC');
-        console.log( SP + ' * ' + ' (1 -' + TF + ' - ' + MF + ' - ' + PM + ') - ' + AC );
         return SP * (1 - TF - MF - PM) - AC;
       case "additional-cost":
         return SP * (1 - TF - MF - PM) - PC;
       case "profit-margin":
-        console.log('1 - TF - MF - (PC + AC) / SP');
-        console.log(1 + ' - ' + TF + ' - ' + MF + ' - ' + '(' + PC + ' + ' + AC + ')/' +  SP);
         return SP === 0 ? null : 1 - TF - MF - (PC + AC) / SP;
       case "marketplace-fee":
         return SP === 0 ? null : 1 - TF - PM - (PC + AC) / SP;
@@ -357,7 +360,38 @@ export class PriceSimulator {
       });
     }
   }
+  // ---------------------------------------------------------------------
+  // Public API
+  // ---------------------------------------------------------------------
 
+  /**
+   * Solves and writes `sell-price` for every marketplace row using the
+   * values currently in the DOM (seeded by the server). Intended to be
+   * called once after instantiation, before the user interacts with anything.
+   *
+   * Bypasses the lock-state decision tree entirely — this is an explicit
+   * initialization step, not a user edit. Rows where the equation cannot
+   * be solved (missing/invalid inputs) are silently skipped rather than
+   * treated as errors, since partial initialization is better than none.
+   */
+    initialize() {
+        for (const id of this.marketplaceIds) {
+            this._solveAndWriteRow(id, "sell-price");
+        }
+    }
+
+    formatInputsOnLoad() {
+        document.querySelectorAll('[data-mask-scale]').forEach(element => {
+            if (!element.value) return;
+
+            const raw = parseFloat(element.value);
+            if (isNaN(raw)) return;
+
+            // Determine mask type from element attributes or data
+            const maskType = element.dataset.maskType || 'currency';
+            element.value = Mask.mask(raw, maskType);
+        });
+    }
   // ---------------------------------------------------------------------
 
   _reportError(err) {
