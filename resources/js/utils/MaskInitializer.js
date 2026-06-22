@@ -68,60 +68,63 @@ export class MaskInitializer {
   /**
    * Applies mask on inputs after page load and attaches real-time listeners.
    */
-  formatInputsOnLoad() {
+    formatInputsOnLoad() {
     document
-      .querySelectorAll(
+        .querySelectorAll(
         '[data-mask-type="currency"], [data-mask-type="percentage"]'
-      )
-      .forEach((element) => {
+        )
+        .forEach((element) => {
+        // Prevent double-binding if formatInputsOnLoad() is called more than once
+        if (element.dataset.maskInitialized) return;
+        element.dataset.maskInitialized = "true";
+
         const maskType = element.dataset.maskType;
 
         // Format any pre-filled value on load
         if (element.value) {
-          const raw = parseFloat(element.value);
-          if (!isNaN(raw)) {
-            // Pre-filled values are assumed to be plain numbers (e.g. from a DB),
-            // so we feed them directly to mask() without going through unmask().
+            const raw = parseFloat(element.value);
+            if (!isNaN(raw)) {
             element.value = this.mask(raw, maskType);
-          }
+            }
         }
 
-        // Re-format on every input event (while the user is typing)
         element.addEventListener("input", (e) => {
-          this._handleInput(e.target, maskType);
+            this._handleInput(e.target, maskType);
         });
 
-        // Re-format (and clean up) when the field loses focus
         element.addEventListener("blur", (e) => {
-          this._handleBlur(e.target, maskType);
+            this._handleBlur(e.target, maskType);
         });
-      });
-  }
-
-  /**
-   * Handles live formatting while the user types.
-   * Keeps a "digits-only" approach so the caret stays predictable.
-   * @param {HTMLInputElement} input
-   * @param {string} maskType
-   */
-  _handleInput(input, maskType) {
-    // Strip everything except digits and one optional leading minus
-    const raw = input.value.replace(/[^\d]/g, "");
-
-    if (!raw) {
-      input.value = "";
-      return;
+        });
     }
 
-    // Treat the raw digits as cents (last two digits = decimals)
-    const numericValue = parseInt(raw, 10) / 100;
+    /**
+    * Handles live formatting while the user types.
+    * @param {HTMLInputElement} input
+    * @param {string} maskType
+    */
+    _handleInput(input, maskType) {
+        if(maskType == "currency"){
+            // Strip everything except digits from the current visible value
+            const raw = input.value.replace(/[^\d]/g, "");
 
-    input.value = this.mask(numericValue, maskType);
+            if (!raw) {
+                input.value = "";
+                input.dataset.rawDigits = "";
+                return;
+            }
 
-    // Place caret at the end — friendliest UX for masked fields
-    const len = input.value.length;
-    input.setSelectionRange(len, len);
-  }
+            // Treat the raw digits as cents (last two digits = decimals)
+            const numericValue = parseInt(raw, 10) / 100;
+
+            input.value = this.mask(numericValue, maskType);
+            input.dataset.rawDigits = raw;
+
+            // Place caret at the end
+            const len = input.value.length;
+            input.setSelectionRange(len, len);
+        }
+    }
 
   /**
    * Handles cleanup when the field loses focus.
